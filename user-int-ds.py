@@ -24,19 +24,24 @@ def load_model():
 
 model, feature_names = load_model()
 
-explainer = shap.TreeExplainer(model)
+# =========================
+# LOAD SHAP EXPLAINER
+# =========================
+@st.cache_resource
+def load_explainer(_model):
+    return shap.TreeExplainer(_model)
+
+explainer = load_explainer(model)
 
 # =========================
 # HEADER
 # =========================
 st.title("🏨 Hotel Booking Cancellation Intelligence")
 
-st.markdown(
-"""
-Machine Learning dashboard to predict **hotel booking cancellations** and analyze
-risk factors using a **LightGBM classification model**.
-"""
-)
+st.markdown("""
+Machine Learning dashboard to predict **hotel booking cancellations**  
+and analyze risk factors using a **LightGBM classification model**.
+""")
 
 st.divider()
 
@@ -45,15 +50,15 @@ st.divider()
 # =========================
 st.sidebar.header("Booking Information")
 
-lead_time = st.sidebar.slider("Lead Time", 0, 500, 30)
+lead_time = st.sidebar.slider("Lead Time", 0, 365, 30)
 
-adr = st.sidebar.number_input("ADR", 0.0, 252.0, 120.0)
+adr = st.sidebar.number_input("ADR", 0.0, 500.0, 120.0)
 
-total_nights = st.sidebar.slider("Total Nights", 1, 69, 1)
+total_nights = st.sidebar.slider("Total Nights", 1, 30, 1)
 
-total_guests = st.sidebar.slider("Guests", 1, 55, 1)
+total_guests = st.sidebar.slider("Guests", 1, 10, 1)
 
-previous_cancellations = st.sidebar.slider("Previous Cancellations", 0, 26, 0)
+previous_cancellations = st.sidebar.slider("Previous Cancellations", 0, 10, 0)
 
 deposit_type = st.sidebar.selectbox(
     "Deposit Type",
@@ -102,9 +107,13 @@ if predict:
 
     input_df = pd.DataFrame([input_data])
 
+    # One-hot encoding
     input_df = pd.get_dummies(input_df)
+
+    # Align features with training model
     input_df = input_df.reindex(columns=feature_names, fill_value=0)
 
+    # Prediction
     prediction = model.predict(input_df)[0]
     probability = model.predict_proba(input_df)[0][1]
 
@@ -188,7 +197,7 @@ if predict:
     st.dataframe(pd.DataFrame([input_data]))
 
 # =========================
-# FEATURE IMPORTANCE
+# GLOBAL FEATURE IMPORTANCE
 # =========================
 st.divider()
 
@@ -205,7 +214,8 @@ fig2 = px.bar(
     fi,
     x="importance",
     y="feature",
-    orientation="h"
+    orientation="h",
+    title="Top Global Features"
 )
 
 st.plotly_chart(fig2, use_container_width=True)
