@@ -43,22 +43,22 @@ st.divider()
 # =========================
 st.sidebar.header("Booking Information")
 
-lead_time = st.sidebar.slider("Lead Time (days before arrival)", 0, 365, 30)
+lead_time = st.sidebar.slider("Lead Time (days before arrival)", 0, 447, 0)
 
 adr = st.sidebar.number_input(
     "ADR (Average Daily Rate)",
     min_value=0.0,
-    max_value=500.0,
-    value=120.0
+    max_value=252.0,
+    value=0.0
 )
 
-total_nights = st.sidebar.slider("Total Nights", 1, 30, 2)
+total_nights = st.sidebar.slider("Total Nights", 1, 69, 2)
 
-total_guests = st.sidebar.slider("Total Guests", 1, 10, 2)
+total_guests = st.sidebar.slider("Total Guests", 1, 55, 2)
 
 previous_cancellations = st.sidebar.slider(
     "Previous Cancellations",
-    0, 10, 0
+    0, 26, 0
 )
 
 deposit_type = st.sidebar.selectbox(
