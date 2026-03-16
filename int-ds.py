@@ -52,9 +52,9 @@ adr = st.sidebar.number_input(
     value=0.0
 )
 
-total_nights = st.sidebar.slider("Total Nights", 1, 69, 2)
+total_nights = st.sidebar.slider("Total Nights", 1, 69, 1)
 
-total_guests = st.sidebar.slider("Total Guests", 1, 55, 2)
+total_guests = st.sidebar.slider("Total Guests", 1, 55, 1)
 
 previous_cancellations = st.sidebar.slider(
     "Previous Cancellations",
